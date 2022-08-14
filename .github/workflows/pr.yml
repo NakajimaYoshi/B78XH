@@ -1,0 +1,36 @@
+name: PR
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: install
+        run: npm install
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Setup Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Generate layout.json and update manifest.json
+        run: |
+          cd ./B78XH
+          python3 build.py
+      - uses: actions/upload-artifact@v2
+        with:
+          name: B78XH
+          path: ./B78XH/
+
